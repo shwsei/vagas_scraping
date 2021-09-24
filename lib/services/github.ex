@@ -1,7 +1,9 @@
 defmodule Github do
+  @base_url "https://api.github.com/"
+
   def get_issues(org, repo) do
     {:ok, response} =
-      HTTPoison.get('https://api.github.com/repos/#{org}/#{repo}/issues?state=open&per_page=100')
+      HTTPoison.get(@base_url <> "repos/#{org}/#{repo}/issues?state=open&per_page=100")
 
     {:ok, data} = Jason.decode(response.body)
 

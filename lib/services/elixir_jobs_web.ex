@@ -6,6 +6,8 @@ defmodule ElixirJobs do
 
     res.body
     |> get_total
+    |> Task.await_many(60000)
+    |> Utils.save_vacancies("elixir_jobs")
   end
 
   defp get_total(html) do
@@ -24,7 +26,10 @@ defmodule ElixirJobs do
   defp parse_values(%{"start" => start, "end" => endValue}),
     do: {String.to_integer(start), String.to_integer(endValue)}
 
-  defp get_jobs({_start, _ed}), do: Enum.map(1..1, &get_page_urls/1)
+  defp get_jobs({start, ed}), do: Enum.map(
+    start..ed,
+    fn page -> Task.async(fn -> get_page_urls(page) end) end
+  )
 
   defp get_page_urls(vacancy) do
     {:ok, res} = HTTPoison.get(@url <> "/?page=#{vacancy}")

@@ -1,5 +1,5 @@
 defmodule Utils do
-  def save_vacancies(data, org) do
+  def save_vacancies(jobs, org) do
     file =
       case File.read("db/vacancies.json") do
         {:ok, content} -> content
@@ -10,8 +10,8 @@ defmodule Utils do
 
     current =
       case org in Map.keys(old_vacancies) do
-        true -> %{old_vacancies | org => data}
-        _ -> Map.merge(old_vacancies, %{org => data})
+        true -> %{old_vacancies | org => jobs}
+        _ -> Map.merge(old_vacancies, %{org => jobs})
       end
       |> Jason.encode!()
 

@@ -10,9 +10,7 @@ defmodule Github do
   def get_issues(org, repo) do
     for page <- 1..count_issues(org, repo) do
       {:ok, response} =
-        HTTPoison.get(
-          @url <> "repos/#{org}/#{repo}/issues?state=open&page=#{page}&per_page=100"
-        )
+        HTTPoison.get(@url <> "repos/#{org}/#{repo}/issues?state=open&page=#{page}&per_page=100")
 
       {:ok, data} = Jason.decode(response.body)
 

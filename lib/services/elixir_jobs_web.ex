@@ -26,10 +26,12 @@ defmodule ElixirJobs do
   defp parse_values(%{"start" => start, "end" => endValue}),
     do: {String.to_integer(start), String.to_integer(endValue)}
 
-  defp get_jobs({start, ed}), do: Enum.map(
-    start..ed,
-    fn page -> Task.async(fn -> get_page_urls(page) end) end
-  )
+  defp get_jobs({start, ed}),
+    do:
+      Enum.map(
+        start..ed,
+        fn page -> Task.async(fn -> get_page_urls(page) end) end
+      )
 
   defp get_page_urls(vacancy) do
     {:ok, res} = HTTPoison.get(@url <> "/?page=#{vacancy}")

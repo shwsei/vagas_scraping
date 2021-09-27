@@ -4,46 +4,55 @@ defmodule Github do
   defp count_issues(org, repo) do
     {:ok, response} = HTTPoison.get(@url <> "repos/#{org}/#{repo}")
     {:ok, data} = Jason.decode(response.body)
-    trunc(data["open_issues"] / 100)
+
+    case trunc(data["open_issues"] / 100) do
+      value when value > 0 -> {:ok, value}
+      _ -> {:err, "Not divided"}
+    end
   end
 
   def get_issues(org, repo) do
-    for page <- 1..count_issues(org, repo) do
-      {:ok, response} =
-        HTTPoison.get(@url <> "repos/#{org}/#{repo}/issues?state=open&page=#{page}&per_page=100")
-
-      {:ok, data} = Jason.decode(response.body)
-
-      Enum.map(data, fn issue ->
-        vacancy =
-          Map.drop(issue, [
-            "active_lock_reason",
-            "closed_at",
-            "comments",
-            "labels_url",
-            "events_url",
-            "author_association",
-            "assignees",
-            "assigne",
-            "node_id",
-            "locked",
-            "milestone",
-            "number",
-            "performed_via_github_app",
-            "repository_url",
-            # Talvez eu remova isso
-            "users"
-          ])
-
-        %{
-          vacancy
-          | "labels" =>
-              Enum.map(
-                vacancy["labels"],
-                &Map.drop(&1, ["color", "default", "id", "url", "node_id"])
-              )
-        }
-      end)
+    case count_issues(org, repo) do
+      {:ok, value} -> Enum.map(1..value, fn page -> get_issue(org, repo, page) end)
+      _ -> []
     end
+  end
+
+  defp get_issue(org, repo, page) do
+    {:ok, response} =
+      HTTPoison.get(@url <> "repos/#{org}/#{repo}/issues?state=open&page=#{page}&per_page=100")
+
+    {:ok, data} = Jason.decode(response.body)
+
+    Enum.map(data, fn issue ->
+      vacancy =
+        Map.drop(issue, [
+          "active_lock_reason",
+          "closed_at",
+          "comments",
+          "labels_url",
+          "events_url",
+          "author_association",
+          "assignees",
+          "assigne",
+          "node_id",
+          "locked",
+          "milestone",
+          "number",
+          "performed_via_github_app",
+          "repository_url",
+          # Talvez eu remova isso
+          "users"
+        ])
+
+      %{
+        vacancy
+        | "labels" =>
+            Enum.map(
+              vacancy["labels"],
+              &Map.drop(&1, ["color", "default", "id", "url", "node_id"])
+            )
+      }
+    end)
   end
 end

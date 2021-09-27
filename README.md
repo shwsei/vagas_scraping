@@ -14,8 +14,8 @@ iex(1)> Webscraping.main
   [ ] Optimize requests to github
   [ ] Better error handlers 
   [ ] Mix Tasks
-  [ ] Scraping for [https://pluo.jobs/](Pluo Jobs)
-  [ ] Scraping for [https://vuejobs.com/](VueJS Jobs)
-  [ ] Scraping for [https://remoteok.io/remote-node-js-jobs](Remote ok)
-  [ ] Scraping for [https://www.careers-page.com/novare-rh](Careers)
-  [ ] Scraping for [https://stackoverflow.com/jobs](StackOverFlow Jobs)
+  [ ] Scraping for [Pluo Jobs](https://pluo.jobs)
+  [ ] Scraping for [VueJS Jobs](https://vuejobs.com)
+  [ ] Scraping for [Remote ok](https://remoteok.io/remote-node-js-jobs)
+  [ ] Scraping for [Careers](https://www.careers-page.com/novare-rh)
+  [ ] Scraping for [StackOverFlow Jobs](https://stackoverflow.com/jobs)

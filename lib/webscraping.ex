@@ -16,7 +16,7 @@ defmodule Webscraping do
       %{org: "CangaceirosDevels", repo: "vagas_de_emprego"},
       %{org: "frontend-ao", repo: "vagas"},
       %{org: "backend-ao", repo: "vagas"},
-      %{org: "rontend-pt", repo: "vagas"},
+      %{org: "frontend-pt", repo: "vagas"},
       %{org: "backend-pt", repo: "vagas"}
     ]
     |> Enum.each(fn %{org: org, repo: repo} ->

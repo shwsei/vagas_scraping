@@ -5,10 +5,7 @@ defmodule Github do
     {:ok, response} = HTTPoison.get(@url <> "repos/#{org}/#{repo}")
     {:ok, data} = Jason.decode(response.body)
 
-    case trunc(data["open_issues"] / 100) do
-      value when value > 0 -> {:ok, value}
-      _ -> {:err, "Not divided"}
-    end
+    trunc(data["open_issues"] / 100)
   end
 
   def get_issues(org, repo) do

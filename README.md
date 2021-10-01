@@ -7,7 +7,7 @@
 mix deps.get
 iex -S mix
 ```
-``ìex
+``
 iex(1)> Webscraping.main
 ``
 ## Todo list

@@ -1,4 +1,6 @@
 defmodule Utils do
+  @moduledoc false
+
   def save_vacancies(jobs, org) do
     file =
       case File.read("db/vacancies.json") do

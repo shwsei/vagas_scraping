@@ -1,4 +1,6 @@
 defmodule Webscraping do
+  @moduledoc false
+
   def main do
     [
       %{org: "rustdevbr", repo: "vagas"},

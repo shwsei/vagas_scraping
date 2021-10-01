@@ -24,6 +24,7 @@ defmodule Webscraping do
     |> Enum.each(fn %{org: org, repo: repo} ->
       Github.get_issues(org, repo)
       |> Utils.save_vacancies(org)
+
       IO.puts("Complete: #{org}/#{repo}")
     end)
 

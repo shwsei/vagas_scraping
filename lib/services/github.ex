@@ -1,4 +1,6 @@
 defmodule Github do
+  @moduledoc false
+
   @url "https://api.github.com/"
 
   defp count_issues(org, repo) do

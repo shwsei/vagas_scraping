@@ -1,5 +1,5 @@
 # Webscraping
-## Get vacancies in many sites and repositories of github
+## Get jobs in many sites and repositories of github
 
 ### Run
 

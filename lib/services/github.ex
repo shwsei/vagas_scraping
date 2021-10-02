@@ -1,4 +1,6 @@
 defmodule Github do
+  @moduledoc false
+
   @url "https://api.github.com/"
 
   defp count_issues(org, repo) do
@@ -9,10 +11,8 @@ defmodule Github do
   end
 
   def get_issues(org, repo) do
-    case count_issues(org, repo) do
-      {:ok, value} -> Enum.map(1..value, fn page -> get_issue(org, repo, page) end)
-      _ -> []
-    end
+    value = count_issues(org, repo)
+    Enum.map(1..value, &get_issue(org, repo, &1))
   end
 
   defp get_issue(org, repo, page) do
@@ -21,9 +21,9 @@ defmodule Github do
 
     {:ok, data} = Jason.decode(response.body)
 
-    Enum.map(data, fn issue ->
-      vacancy =
-        Map.drop(issue, [
+    Enum.map(data, fn job ->
+      raw =
+        Map.drop(job, [
           "active_lock_reason",
           "closed_at",
           "comments",
@@ -38,17 +38,20 @@ defmodule Github do
           "number",
           "performed_via_github_app",
           "repository_url",
-          # Talvez eu remova isso
-          "users"
+          "user"
         ])
-
       %{
-        vacancy
-        | "labels" =>
-            Enum.map(
-              vacancy["labels"],
-              &Map.drop(&1, ["color", "default", "id", "url", "node_id"])
-            )
+        raw: Jason.encode!(raw),
+        job_global_id: "github/#{org}/#{repo}/#{job["id"]}",
+        job_update_id: job["updated_at"],
+        title: job["title"],
+        strings:
+          Enum.map(
+            job["labels"],
+            fn value ->
+              "#{value["name"]} #{value["description"]}"
+            end
+          )
       }
     end)
   end

@@ -1,4 +1,5 @@
 defmodule ElixirJobs do
+  @moduledoc false
   @url "https://elixirjobs.net"
 
   def get_jobs do
@@ -6,8 +7,8 @@ defmodule ElixirJobs do
 
     res.body
     |> get_total
-    |> Task.await_many(60000)
-    |> Utils.save_vacancies("elixir_jobs")
+    |> Task.await_many(60_000)
+    |> Utils.save_jobs("elixir_jobs")
   end
 
   defp get_total(html) do

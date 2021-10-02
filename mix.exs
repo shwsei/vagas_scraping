@@ -26,7 +26,8 @@ defmodule Webscraping.MixProject do
     [
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.2"},
-      {:floki, "~> 0.31.0"}
+      {:floki, "~> 0.31.0"},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 end

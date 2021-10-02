@@ -1,20 +1,22 @@
 defmodule Utils do
-  def save_vacancies(jobs, org) do
+  @moduledoc false
+
+  def save_jobs(jobs, org) do
     file =
-      case File.read("db/vacancies.json") do
+      case File.read("db/jobs.json") do
         {:ok, content} -> content
-        _ -> File.write("db/vacancies.json", "{}")
+        _ -> File.write("db/jobs.json", "{}")
       end
 
-    {:ok, old_vacancies} = Jason.decode(file)
+    {:ok, old_jobs} = Jason.decode(file)
 
     current =
-      case org in Map.keys(old_vacancies) do
-        true -> %{old_vacancies | org => jobs}
-        _ -> Map.merge(old_vacancies, %{org => jobs})
+      case org in Map.keys(old_jobs) do
+        true -> %{old_jobs | org => jobs}
+        _ -> Map.merge(old_jobs, %{org => jobs})
       end
       |> Jason.encode!()
 
-    File.write!("db/vacancies.json", current)
+    File.write!("db/jobs.json", current)
   end
 end

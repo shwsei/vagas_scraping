@@ -10,6 +10,7 @@ defmodule JobsScraping.ElixirJobs do
     res.body
     |> get_total
     |> Task.await_many(60_000)
+    |> Enum.reduce(&(&2 ++ &1))
     |> Utils.save_jobs("elixir_jobs")
   end
 
@@ -38,7 +39,6 @@ defmodule JobsScraping.ElixirJobs do
         start..ed,
         fn page -> Task.async(fn -> get_page_urls(page) end) end
       )
-      |> Enum.reduce(&(&2 ++ &1))
 
   defp get_page_urls(vacancy) do
     {:ok, res} = HTTPoison.get(@url <> "/?page=#{vacancy}")

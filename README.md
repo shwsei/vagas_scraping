@@ -1,4 +1,4 @@
-# Webscraping
+# Jobs Scraping
 ## Get jobs in many sites and repositories of github
 
 ### Run

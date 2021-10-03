@@ -1,8 +1,10 @@
-defmodule ElixirJobs do
+defmodule JobsScraping.ElixirJobs do
   @moduledoc false
   @url "https://elixirjobs.net"
 
   def get_jobs do
+    alias JobsScraping.{Utils}
+
     {:ok, res} = HTTPoison.get(@url)
 
     res.body
@@ -11,13 +13,16 @@ defmodule ElixirJobs do
     |> Utils.save_jobs("elixir_jobs")
   end
 
-  defp get_total(html) do
-    {:ok, document} = Floki.parse_document(html)
+  defp get_text(doc, filter) do
+    Floki.find(doc, filter)
+    |> Floki.text()
+    |> String.trim()
+  end
 
-    text =
-      Floki.find(document, ".level-left > .level-item")
-      |> Floki.text()
-      |> String.trim()
+  defp get_total(html) do
+    {:ok, doc} = Floki.parse_document(html)
+
+    text = get_text(doc, ".level-left > .level-item")
 
     Regex.named_captures(~r/page (?<start>.*) of (?<end>.*)/, text)
     |> parse_values
@@ -33,12 +38,13 @@ defmodule ElixirJobs do
         start..ed,
         fn page -> Task.async(fn -> get_page_urls(page) end) end
       )
+      |> Enum.reduce(&(&2 ++ &1))
 
   defp get_page_urls(vacancy) do
     {:ok, res} = HTTPoison.get(@url <> "/?page=#{vacancy}")
-    {:ok, document} = Floki.parse_document(res.body)
+    {:ok, doc} = Floki.parse_document(res.body)
 
-    Floki.find(document, ".offers-index a")
+    Floki.find(doc, ".offers-index a")
     |> Floki.attribute("href")
     |> Enum.filter(fn url -> not String.contains?(url, "?page=") end)
     |> Enum.map(&get_page/1)
@@ -46,46 +52,23 @@ defmodule ElixirJobs do
 
   defp get_page(url) do
     {:ok, res} = HTTPoison.get(@url <> url)
-    {:ok, document} = Floki.parse_document(res.body)
-    content = Floki.find(document, ".content")
+    {:ok, doc} = Floki.parse_document(res.body)
 
     %{
-      title: get_title(content),
-      body: Floki.find(document, ".body") |> Floki.text() |> String.trim(),
-      details: get_details(content)
-    }
-  end
-
-  defp get_title(html) do
-    %{
-      title:
-        Floki.find(html, ".title > strong")
-        |> Floki.text()
-        |> String.trim(),
-      company_and_local:
-        Floki.find(html, ".title > small")
-        |> Floki.text()
-        |> String.trim()
-    }
-  end
-
-  defp get_details(html) do
-    workplace =
-      Floki.find(html, ".is-warning")
-      |> Floki.text()
-      |> String.trim()
-
-    %{
-      date:
-        Floki.find(html, ".is-danger")
-        |> Floki.text()
-        |> String.trim(),
-      workplace: workplace,
-      is_remote: workplace == "Remote",
-      type:
-        Floki.find(html, ".is-link")
-        |> Floki.text()
-        |> String.trim()
+      job_global_id: "elixirjobs" <> url,
+      job_link:
+        Floki.find(doc, ".level-item > .button")
+        |> Floki.attribute("href")
+        |> hd,
+      raw: res.body,
+      strings: [
+        get_text(doc, ".title > small"),
+        get_text(doc, ".body"),
+        get_text(doc, ".is-link"),
+        get_text(doc, ".is-danger")
+      ],
+      title: get_text(doc, ".title > strong"),
+      description: get_text(doc, ".body")
     }
   end
 end

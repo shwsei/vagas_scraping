@@ -1,4 +1,4 @@
-defmodule VueJobs do
+defmodule JobsScraping.VueJobs do
   @moduledoc false
 
   @url "https://vuejobs.com/"

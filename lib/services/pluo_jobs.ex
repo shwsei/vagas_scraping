@@ -1,4 +1,4 @@
-defmodule PluoJobs do
+defmodule JobsScraping.PluoJobs do
   @moduledoc false
 
   @url "https://pyjobs.com.br/api/v2/jobs/"

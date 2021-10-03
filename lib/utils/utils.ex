@@ -1,4 +1,4 @@
-defmodule Utils do
+defmodule JobsScraping.Utils do
   @moduledoc false
 
   def save_jobs(jobs, org) do

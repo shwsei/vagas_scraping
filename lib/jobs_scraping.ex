@@ -1,5 +1,6 @@
-defmodule Webscraping do
+defmodule JobsScraping do
   @moduledoc false
+  alias JobsScraping.{Github, Utils, PluoJobs, VueJobs, ElixirJobs}
 
   def main do
     [
@@ -21,15 +22,16 @@ defmodule Webscraping do
       %{org: "frontend-pt", repo: "vagas"},
       %{org: "backend-pt", repo: "vagas"}
     ]
-    |> Enum.each(
-      fn (%{org: org, repo: repo}) ->
-        Github.get_issues(org, repo)
-        |> Utils.save_jobs(org)
-        IO.puts("Complete: #{org}/#{repo}")
+    |> Enum.each(fn %{org: org, repo: repo} ->
+      Github.get_issues(org, repo)
+      |> Utils.save_jobs(org)
+
+      IO.puts("Complete: #{org}/#{repo}")
     end)
 
     PluoJobs.get_jobs()
     |> Utils.save_jobs("pluo_jobs")
+
     VueJobs.get_jobs()
     |> Utils.save_jobs("vue_jobs")
 

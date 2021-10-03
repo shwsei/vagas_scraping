@@ -1,4 +1,4 @@
-defmodule Github do
+defmodule JobsScraping.Github do
   @moduledoc false
 
   @url "https://api.github.com/"
@@ -12,7 +12,9 @@ defmodule Github do
 
   def get_issues(org, repo) do
     value = count_issues(org, repo)
+
     Enum.map(1..value, &get_issue(org, repo, &1))
+    |> Enum.reduce(&(&1 ++ &2))
   end
 
   defp get_issue(org, repo, page) do
@@ -40,9 +42,10 @@ defmodule Github do
           "repository_url",
           "user"
         ])
+
       %{
         raw: Jason.encode!(raw),
-        job_global_id: "github/#{org}/#{repo}/#{job["id"]}",
+        job_global_id: "github/#{org}/#{repo}/#{job["number"]}",
         job_update_id: job["updated_at"],
         title: job["title"],
         strings:
@@ -51,7 +54,7 @@ defmodule Github do
             fn value ->
               "#{value["name"]} #{value["description"]}"
             end
-          )
+          ) ++ job["body"]
       }
     end)
   end

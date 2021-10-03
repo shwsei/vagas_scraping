@@ -8,7 +8,7 @@ mix deps.get
 iex -S mix
 ```
 ``
-iex(1)> Webscraping.main
+iex(1)> JobsScraping.main
 ``
 ## Todo list
 - [ ] Optimize requests to github

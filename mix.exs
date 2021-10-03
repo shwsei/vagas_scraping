@@ -1,9 +1,9 @@
-defmodule Webscraping.MixProject do
+defmodule JobsScraping.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :webscraping,
+      app: :JobsScraping,
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
@@ -19,7 +19,7 @@ defmodule Webscraping.MixProject do
   end
 
   defp escript do
-    [main_module: Webscraping]
+    [main_module: JobsScraping]
   end
 
   defp deps do

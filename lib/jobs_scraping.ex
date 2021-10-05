@@ -5,6 +5,7 @@ defmodule JobsScraping do
   def main do
     [
       %{org: "rustdevbr", repo: "vagas"},
+      %{org: "react-brasil", repo: "vagas"},
       %{org: "Gommunity", repo: "vagas"},
       %{org: "phpdevbr", repo: "vagas"},
       %{org: "dotnetdevbr", repo: "vagas"},

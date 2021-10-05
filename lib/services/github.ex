@@ -6,7 +6,6 @@ defmodule JobsScraping.Github do
   defp count_issues(org, repo) do
     {:ok, response} = HTTPoison.get(@url <> "repos/#{org}/#{repo}")
     {:ok, data} = Jason.decode(response.body)
-
     trunc(data["open_issues"] / 100)
   end
 
@@ -48,13 +47,14 @@ defmodule JobsScraping.Github do
         job_global_id: "github/#{org}/#{repo}/#{job["number"]}",
         job_update_id: job["updated_at"],
         title: job["title"],
+        description: job["body"],
         strings:
           Enum.map(
             job["labels"],
             fn value ->
               "#{value["name"]} #{value["description"]}"
             end
-          ) ++ job["body"]
+          ) ++ [ job["body"] ]
       }
     end)
   end

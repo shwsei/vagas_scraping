@@ -13,7 +13,9 @@ iex(1)> JobsScraping.main
 ## Todo list
 - [ ] Optimize requests to github
 - [ ] Better error handlers 
-- [ ] Mix Tasks
+- [ ] Mix Tasks 
+- [ ] Rate limite for github
+- [ ] Add Supervisors
 - [x] Scraping for [Pluo Jobs](https://pluo.jobs)
 - [X] Scraping for [VueJS Jobs](https://vuejobs.com)
 - [ ] Scraping for [Remote ok](https://remoteok.io/remote-node-js-jobs)
